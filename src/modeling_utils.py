@@ -17,7 +17,7 @@ from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.feature_selection import RFECV
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, TargetEncoder, StandardScaler
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.metrics import roc_auc_score, classification_report, confusion_matrix, roc_curve, precision_recall_curve
+from sklearn.metrics import roc_auc_score, classification_report, confusion_matrix, roc_curve, precision_recall_curve, accuracy_score, precision_score, recall_score, f1_score, brier_score_loss, auc
 from lightgbm import LGBMClassifier
 import time
 
@@ -677,7 +677,7 @@ def evaluate_classifier(y_true, y_pred, probas):
         print(f'Gini: {round(gini, 2)}')
         
         scores = pd.DataFrame()
-        scores['actual'] = y_test.reset_index(drop=True)
+        scores['actual'] = y_true.reset_index(drop=True)
         scores['churn_probability'] = probas
         sorted_scores = scores.sort_values(by=['churn_probability'], ascending=False)
         sorted_scores['cum_negative'] = (1 - sorted_scores['actual']).cumsum() / (1 - sorted_scores['actual']).sum()
