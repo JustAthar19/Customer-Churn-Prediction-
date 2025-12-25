@@ -63,15 +63,18 @@ class PredictPipeline:
 
             model_path = os.path.join('artifacts', 'model.pkl')
             preprocessor_path = os.path.join('artifacts', 'preprocessor.pkl')
+            feature_selector_path = os.path.join('artifacts', 'feature_selector.pkl')
             
             logging.info('Load model and preprocessor objects.')
 
             model = load_object(file_path=model_path)
             preprocessor = load_object(file_path=preprocessor_path)
+            feature_selector = load_object(file_path=feature_selector_path)
 
             logging.info('Preprocess the input data.')
 
             prepared_data = preprocessor.transform(features)
+            prepared_data = feature_selector.transform(prepared_data)
             
             # Assert input data is float64 data type.
             prepared_data = prepared_data.astype('float64')
@@ -82,8 +85,7 @@ class PredictPipeline:
             predicted_proba = model.predict_proba(prepared_data,predict_disable_shape_check=True)[:, 1][0]
 
             # Prediction output (customer's probability of churning).
-            prediction = f"""Customer's probability of churning:
-                             {round(predicted_proba * 100, 3)}%"""
+            prediction = f"""Customer's probability of churning: {round(predicted_proba * 100, 3)}%"""
 
             logging.info('Prediction successfully made.')
 
