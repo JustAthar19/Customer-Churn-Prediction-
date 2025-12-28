@@ -32,6 +32,7 @@ class ChurnPrediction(BaseModel):
 app = FastAPI()
 
 app.mount("/templates", StaticFiles(directory='templates'), name='templates')
+app.mount("/static", StaticFiles(directory='static'), name='static')
 templates = Jinja2Templates(directory="templates")
 
 
