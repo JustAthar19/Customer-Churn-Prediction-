@@ -233,6 +233,52 @@
             color: #999;
             margin-top: 4px;
         }
+
+        .analysis-section {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .analysis-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .analysis-btn {
+            background: #2c3e50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .analysis-btn:hover {
+            background: #34495e;
+        }
+
+        .analysis-btn.active {
+            background: #1a252f;
+        }
+
+        .html-viewer {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            display: none;
+        }
+
+        .html-viewer.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -242,6 +288,7 @@
         <div class="tabs">
             <button class="tab-button active" onclick="switchTab('predict')">Predict Churn</button>
             <button class="tab-button" onclick="switchTab('train')">Train Model</button>
+            <button class="tab-button" onclick="switchTab('analysis')">Analysis</button>
         </div>
 
         <!-- Prediction Tab -->
@@ -414,6 +461,22 @@
                 <div class="result" id="train-result"></div>
             </div>
         </div>
+
+        <!-- Analysis Tab -->
+        <div id="analysis-tab" class="tab-content">
+            <div class="analysis-section">
+                <h2>Data Analysis & Modeling Reports</h2>
+                <p style="color: #666; margin-bottom: 30px;">View the exploratory data analysis and modeling reports below.</p>
+                
+                <div class="analysis-buttons">
+                    <button class="analysis-btn" onclick="showReport('eda')">Show EDA Report</button>
+                    <button class="analysis-btn" onclick="showReport('modeling')">Show Modeling Report</button>
+                </div>
+
+                <iframe id="eda-viewer" class="html-viewer" src="/static/Exploratory_Data_Analysis.html"></iframe>
+                <iframe id="modeling-viewer" class="html-viewer" src="/static/Modeling.html"></iframe>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -433,9 +496,33 @@
             if (tab === 'predict') {
                 document.getElementById('predict-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[0].classList.add('active');
-            } else {
+            } else if (tab === 'train') {
                 document.getElementById('train-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[1].classList.add('active');
+            } else if (tab === 'analysis') {
+                document.getElementById('analysis-tab').classList.add('active');
+                document.querySelectorAll('.tab-button')[2].classList.add('active');
+            }
+        }
+
+        // Report viewing functionality
+        function showReport(reportType) {
+            // Hide all viewers
+            document.getElementById('eda-viewer').classList.remove('active');
+            document.getElementById('modeling-viewer').classList.remove('active');
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.analysis-btn').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected report
+            if (reportType === 'eda') {
+                document.getElementById('eda-viewer').classList.add('active');
+                document.querySelectorAll('.analysis-btn')[0].classList.add('active');
+            } else if (reportType === 'modeling') {
+                document.getElementById('modeling-viewer').classList.add('active');
+                document.querySelectorAll('.analysis-btn')[1].classList.add('active');
             }
         }
 
